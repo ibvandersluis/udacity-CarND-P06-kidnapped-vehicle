@@ -3,6 +3,9 @@
  *
  * Created on: Dec 12, 2016
  * Author: Tiffany Huang
+ * 
+ * Modified on: Sep 30, 2022
+ * Maintainer: Isaac Vander Sluis
  */
 
 #include "particle_filter/particle_filter.h"
