@@ -4,6 +4,9 @@
  *
  * Created on: Dec 12, 2016
  * Author: Tiffany Huang
+ * 
+ * Modified on: Sep 30, 2022
+ * Maintainer: Isaac Vander Sluis
  */
 
 #ifndef PARTICLE_FILTER_H_
@@ -30,8 +33,8 @@ class ParticleFilter
 {
 public:
   // Constructor
-  // @param num_particles Number of particles
-  ParticleFilter() : num_particles(0), is_initialized(false) {}
+  // @param num_particles_ Number of particles
+  ParticleFilter() : num_particles_(0), initialized_(false) {}
 
   // Destructor
   ~ParticleFilter() {}
@@ -98,7 +101,7 @@ public:
   /**
    * initialized Returns whether particle filter is initialized yet or not.
    */
-  bool initialized() const { return is_initialized; }
+  bool isInitialized() const { return initialized_; }
 
   /**
    * Used for obtaining debugging information related to particles.
@@ -111,13 +114,13 @@ public:
 
 private:
   // Number of particles to draw
-  int num_particles;
+  int num_particles_;
 
   // Flag, if filter is initialized
-  bool is_initialized;
+  bool initialized_;
 
   // Vector of weights of all particles
-  std::vector<double> weights;
+  std::vector<double> weights_;
 };
 
 #endif  // PARTICLE_FILTER_H_

@@ -67,7 +67,7 @@ int main()
 
           if (event == "telemetry") {
             // j[1] is the data JSON object
-            if (!pf.initialized()) {
+            if (!pf.isInitialized()) {
               // Sense noisy position data from the simulator
               double sense_x = std::stod(j[1]["sense_x"].get<string>());
               double sense_y = std::stod(j[1]["sense_y"].get<string>());
