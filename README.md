@@ -4,7 +4,9 @@ The sixth project in the Udacity Self-Driving Car Engineer Nanodegree: using an 
 
 ## Description
 
-[description here]
+The particle filter algorithm works like this:
+
+![Particle Filter Algorithm Flowchart](https://user-images.githubusercontent.com/14826664/193294008-6de88409-48c1-40af-ae91-304e7890a90c.png)
 
 ## Requirements
 
