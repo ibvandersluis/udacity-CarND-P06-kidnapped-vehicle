@@ -25,7 +25,7 @@
 using std::string;
 using std::vector;
 
-void ParticleFilter::init(double /*x*/, double /*y*/, double /*theta*/, double /*std*/[])
+void ParticleFilter::init(double x, double y, double theta, double std[])
 {
   /**
    * TODO: Set the number of particles. Initialize all particles to 
@@ -35,7 +35,26 @@ void ParticleFilter::init(double /*x*/, double /*y*/, double /*theta*/, double /
    * NOTE: Consult particle_filter.h for more information about this method 
    *   (and others in this file).
    */
-  num_particles_ = 0;  // TODO: Set the number of particles
+
+  std::default_random_engine gen;
+
+  std::normal_distribution<double> dist_x(x, std[0]);
+  std::normal_distribution<double> dist_y(y, std[1]);
+  std::normal_distribution<double> dist_theta(theta, std[2]);
+
+  num_particles_ = 1000;  // TODO: Set the number of particles
+
+  for (int i = 0; i < num_particles_; ++i) {
+    Particle p;
+
+    p.id = i;
+    p.x = dist_x(gen);
+    p.y = dist_y(gen);
+    p.theta = dist_theta(gen);
+    p.weight = 1.0;
+
+    particles_.push_back(p);
+  }
 }
 
 void ParticleFilter::prediction(
