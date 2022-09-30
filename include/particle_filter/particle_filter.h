@@ -110,7 +110,7 @@ public:
   std::string getSenseCoord(Particle best, std::string coord);
 
   // Set of current particles
-  std::vector<Particle> particles;
+  std::vector<Particle> particles_;
 
 private:
   // Number of particles to draw
