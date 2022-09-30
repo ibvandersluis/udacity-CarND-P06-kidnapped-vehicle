@@ -98,7 +98,7 @@ public:
   /**
    * initialized Returns whether particle filter is initialized yet or not.
    */
-  const bool initialized() const { return is_initialized; }
+  bool initialized() const { return is_initialized; }
 
   /**
    * Used for obtaining debugging information related to particles.

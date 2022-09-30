@@ -3,8 +3,7 @@ project(udacity_particle_filter)
 
 add_definitions(-std=c++11)
 
-set(CXX_FLAGS "-Wall")
-set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
+add_compile_options(-Wall -Wextra -pedantic -Werror)
 
 include_directories(
   include

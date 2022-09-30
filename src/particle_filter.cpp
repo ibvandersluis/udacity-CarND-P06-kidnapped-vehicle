@@ -22,7 +22,7 @@
 using std::string;
 using std::vector;
 
-void ParticleFilter::init(double x, double y, double theta, double std[])
+void ParticleFilter::init(double /*x*/, double /*y*/, double /*theta*/, double /*std*/[])
 {
   /**
    * TODO: Set the number of particles. Initialize all particles to 
@@ -35,7 +35,8 @@ void ParticleFilter::init(double x, double y, double theta, double std[])
   num_particles = 0;  // TODO: Set the number of particles
 }
 
-void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate)
+void ParticleFilter::prediction(
+  double /*delta_t*/, double /*std_pos*/[], double /*velocity*/, double /*yaw_rate*/)
 {
   /**
    * TODO: Add measurements to each particle and add random Gaussian noise.
@@ -47,7 +48,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 }
 
 void ParticleFilter::dataAssociation(
-  vector<LandmarkObs> predicted, vector<LandmarkObs> & observations)
+  vector<LandmarkObs> /*predicted*/, vector<LandmarkObs> & /*observations*/)
 {
   /**
    * TODO: Find the predicted measurement that is closest to each 
@@ -60,8 +61,8 @@ void ParticleFilter::dataAssociation(
 }
 
 void ParticleFilter::updateWeights(
-  double sensor_range, double std_landmark[], const vector<LandmarkObs> & observations,
-  const Map & map_landmarks)
+  double /*sensor_range*/, double /*std_landmark*/[], const vector<LandmarkObs> & /*observations*/,
+  const Map & /*map_landmarks*/)
 {
   /**
    * TODO: Update the weights of each particle using a mult-variate Gaussian 
