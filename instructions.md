@@ -1,7 +1,7 @@
 # Overview
 This repository contains all the code needed to complete the final project for the Localization course in Udacity's Self-Driving Car Nanodegree.
 
-#### Submission
+## Submission
 All you will need to submit is your `src` directory. You should probably do a `git pull` before submitting to verify that your project passes the most up-to-date version of the grading code (there are some parameters in `src/main.cpp` which govern the requirements on accuracy and run time).
 
 ## Project Introduction
@@ -16,28 +16,25 @@ This repository includes two files that can be used to set up and install uWebSo
 
 Once the install for uWebSocketIO is complete, the main program can be built and ran by doing the following from the project top directory.
 
-1. mkdir build
-2. cd build
-3. cmake ..
-4. make
-5. ./particle_filter
-
-Alternatively some scripts have been included to streamline this process, these can be leveraged by executing the following in the top directory of the project:
-
-1. ./clean.sh
-2. ./build.sh
-3. ./run.sh
+```bash
+mkdir build
+cd build
+cmake ..
+make
+./particle_filter
+```
 
 Tips for setting up your environment can be found in the Project: Extended Kalman Filters, Environment Setup Page.
 
-Note that the programs that need to be written to accomplish the project are src/particle_filter.cpp, and particle_filter.h
+Note that the programs that need to be written to accomplish the project are `src/particle_filter.cpp`, and `particle_filter.h`
 
-The program main.cpp has already been filled out, but feel free to modify it.
+The program `main.cpp` has already been filled out, but feel free to modify it.
 
-Here is the main protocol that main.cpp uses for uWebSocketIO in communicating with the simulator.
+Here is the main protocol that `main.cpp` uses for uWebSocketIO in communicating with the simulator.
 
 INPUT: values provided by the simulator to the c++ program
 
+```
 // sense noisy position data from the simulator
 
 ["sense_x"]
@@ -57,10 +54,11 @@ INPUT: values provided by the simulator to the c++ program
 ["sense_observations_x"]
 
 ["sense_observations_y"]
-
+```
 
 OUTPUT: values provided by the c++ program to the simulator
 
+```
 // best particle values used for calculating the error evaluation
 
 ["best_particle_x"]
@@ -80,7 +78,7 @@ OUTPUT: values provided by the c++ program to the simulator
 ["best_particle_sense_x"] <= list of sensed x positions
 
 ["best_particle_sense_y"] <= list of sensed y positions
-
+```
 
 Your job is to build out the methods in `particle_filter.cpp` until the simulator output says:
 
@@ -93,23 +91,21 @@ The directory structure of this repository is as follows:
 
 ```
 root
-|   build.sh
-|   clean.sh
 |   CMakeLists.txt
 |   README.md
-|   run.sh
 |
 |___data
-|   |   
-|   |   map_data.txt
+|       map_data.txt
 |   
-|   
+|___include
+|       helper_functions.h
+|       json.hpp
+|       map.h
+|       particle_filter.h
+|
 |___src
-    |   helper_functions.h
-    |   main.cpp
-    |   map.h
-    |   particle_filter.cpp
-    |   particle_filter.h
+        main.cpp
+        particle_filter.cpp
 ```
 
 The only file you should modify is `particle_filter.cpp` in the `src` directory. The file contains the scaffolding of a `ParticleFilter` class and some associated methods. Read through the code, the comments, and the header file `particle_filter.h` to get a sense for what this code is expected to do.
@@ -119,7 +115,7 @@ If you are interested, take a look at `src/main.cpp` as well. This file contains
 ## Inputs to the Particle Filter
 You can find the inputs to the particle filter in the `data` directory.
 
-#### The Map*
+### The Map
 `map_data.txt` includes the position of landmarks (in meters) on an arbitrary Cartesian coordinate system. Each row has three columns
 1. x position
 2. y position
@@ -138,6 +134,3 @@ The things the grading code is looking for are:
 1. **Accuracy**: your particle filter should localize vehicle position and yaw to within the values specified in the parameters `max_translation_error` and `max_yaw_error` in `src/main.cpp`.
 
 2. **Performance**: your particle filter should complete execution within the time of 100 seconds.
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
