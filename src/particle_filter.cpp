@@ -57,8 +57,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[])
   }
 }
 
-void ParticleFilter::prediction(
-  double /*delta_t*/, double /*std_pos*/[], double /*velocity*/, double /*yaw_rate*/)
+void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate)
 {
   /**
    * TODO: Add measurements to each particle and add random Gaussian noise.
@@ -67,6 +66,26 @@ void ParticleFilter::prediction(
    *  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
    *  http://www.cplusplus.com/reference/random/default_random_engine/
    */
+
+  std::default_random_engine gen;
+
+  for (size_t i = 0; i < particles_.size(); ++i) {
+    double initial_x = particles_.at(i).x;
+    double initial_y = particles_.at(i).y;
+    double initial_yaw = particles_.at(i).theta;
+
+    double new_yaw = initial_yaw + (yaw_rate * delta_t);
+    double new_x = initial_x + ((velocity / yaw_rate) * (sin(new_yaw) - sin(initial_yaw)));
+    double new_y = initial_y + ((velocity / yaw_rate) * (cos(initial_yaw) - cos(new_yaw)));
+
+    std::normal_distribution<double> dist_x(new_x, std_pos[0]);
+    std::normal_distribution<double> dist_y(new_y, std_pos[1]);
+    std::normal_distribution<double> dist_theta(new_yaw, std_pos[2]);
+
+    particles_.at(i).x = dist_x(gen);
+    particles_.at(i).y = dist_y(gen);
+    particles_.at(i).theta = dist_theta(gen);
+  }
 }
 
 void ParticleFilter::dataAssociation(
