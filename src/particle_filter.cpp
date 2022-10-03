@@ -89,7 +89,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 }
 
 void ParticleFilter::dataAssociation(
-  vector<LandmarkObs> /*predicted*/, vector<LandmarkObs> & /*observations*/)
+  vector<LandmarkObs> predicted, vector<LandmarkObs> & observations)
 {
   /**
    * TODO: Find the predicted measurement that is closest to each 
@@ -99,6 +99,27 @@ void ParticleFilter::dataAssociation(
    *   probably find it useful to implement this method and use it as a helper 
    *   during the updateWeights phase.
    */
+
+  for (size_t j = 0; j < observations.size(); ++j) {
+    auto x1 = observations.at(j).x;
+    auto y1 = observations.at(j).y;
+    int closest = 0;
+    double min_distance;
+    for (size_t k = 0; k < predicted.size(); ++k) {
+      auto x2 = predicted.at(k).x;
+      auto y2 = predicted.at(k).y;
+      auto distance = dist(x1, y1, x2, y2);
+
+      if (k == 0) {
+        min_distance = distance;
+        closest = predicted.at(k).id;
+      } else if (distance < min_distance) {
+        min_distance = distance;
+        closest = predicted.at(k).id;
+      }
+    }
+    observations.at(j).id = closest;
+  }
 }
 
 void ParticleFilter::updateWeights(
