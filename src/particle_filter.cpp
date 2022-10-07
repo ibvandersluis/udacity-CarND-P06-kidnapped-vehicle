@@ -123,8 +123,8 @@ void ParticleFilter::dataAssociation(
 }
 
 void ParticleFilter::updateWeights(
-  double /*sensor_range*/, double /*std_landmark*/[], const vector<LandmarkObs> & /*observations*/,
-  const Map & /*map_landmarks*/)
+  double sensor_range, double std_landmark[], const vector<LandmarkObs> & observations,
+  const Map & map_landmarks)
 {
   /**
    * TODO: Update the weights of each particle using a mult-variate Gaussian 
@@ -139,6 +139,18 @@ void ParticleFilter::updateWeights(
    *   and the following is a good resource for the actual equation to implement
    *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
    */
+
+  for (size_t i = 0; i < particles_.size(); ++i) {
+    auto tf_observations = vector<LandmarkObs>{};
+    for (size_t j = 0; j < observations.size(); ++j) {
+      // TODO: Step 1 - TF from vehicle frame to map frame
+    }
+    // TODO: Step 2 - Associate transformed observations with nearest landmark
+    for (size_t k = 0; k < tf_observations.size(); ++k) {
+      // TODO: Step 3a - Calculate probabilities
+    }
+    // TODO: Step 3b - Combine probabilities
+  }
 }
 
 void ParticleFilter::resample()
