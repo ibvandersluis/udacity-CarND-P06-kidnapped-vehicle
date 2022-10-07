@@ -114,7 +114,7 @@ public:
 
 private:
   // Number of particles to draw
-  int num_particles_;
+  unsigned int num_particles_;
 
   // Flag, if filter is initialized
   bool initialized_;
