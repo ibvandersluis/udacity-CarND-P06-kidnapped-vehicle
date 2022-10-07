@@ -33,13 +33,13 @@ struct control_s
 };
 
 /**
- * Struct representing one ground truth position.
+ * Struct representing one 2D pose with heading.
  */
-struct ground_truth
+struct pose
 {
-  double x;      // Global vehicle x position [m]
-  double y;      // Global vehicle y position
-  double theta;  // Global vehicle yaw [rad]
+  double x;      // Global x position [m]
+  double y;      // Global y position
+  double theta;  // Global yaw [rad]
 };
 
 /**
@@ -173,7 +173,7 @@ inline bool read_control_data(std::string filename, std::vector<control_s> & pos
  * @param filename Name of file containing ground truth.
  * @output True if opening and reading file was successful
  */
-inline bool read_gt_data(std::string filename, std::vector<ground_truth> & gt)
+inline bool read_gt_data(std::string filename, std::vector<pose> & ground_truths)
 {
   // Get file of position measurements
   std::ifstream in_file_pos(filename.c_str(), std::ifstream::in);
@@ -193,7 +193,7 @@ inline bool read_gt_data(std::string filename, std::vector<ground_truth> & gt)
     double x, y, azimuth;
 
     // Declare single ground truth
-    ground_truth single_gt;
+    pose single_gt;
 
     //read data from line to values
     iss_pos >> x;
@@ -206,7 +206,7 @@ inline bool read_gt_data(std::string filename, std::vector<ground_truth> & gt)
     single_gt.theta = azimuth;
 
     // Add to list of control measurements and ground truth
-    gt.push_back(single_gt);
+    ground_truths.push_back(single_gt);
   }
   return true;
 }
