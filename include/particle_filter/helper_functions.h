@@ -33,6 +33,16 @@ struct control_s
 };
 
 /**
+ * 
+ * 
+ */
+struct point
+{
+  double x;  // Global x position [m]
+  double y;  // Global y position [m]
+};
+
+/**
  * Struct representing one 2D pose with heading.
  */
 struct pose

@@ -142,8 +142,18 @@ void ParticleFilter::updateWeights(
 
   for (size_t i = 0; i < particles_.size(); ++i) {
     auto tf_observations = vector<LandmarkObs>{};
+    auto theta = particles_.at(i).theta;
+    auto p = point{particles_.at(i).x, particles_.at(i).y};
     for (size_t j = 0; j < observations.size(); ++j) {
       // TODO: Step 1 - TF from vehicle frame to map frame
+      auto obs = point{observations.at(j).x, observations.at(j).y};
+
+      auto tf_x = p.x + (cos(theta) * obs.x) - (sin(theta) * obs.y);
+      auto tf_y = p.y + (sin(theta) * obs.x) + (cos(theta) * obs.y);
+
+      auto tf_obs = LandmarkObs{observations.at(j).id, tf_x, tf_y};
+
+      tf_observations.emplace_back(tf_obs);
     }
     // TODO: Step 2 - Associate transformed observations with nearest landmark
     for (size_t k = 0; k < tf_observations.size(); ++k) {
