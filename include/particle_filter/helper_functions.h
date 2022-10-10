@@ -33,8 +33,7 @@ struct control_s
 };
 
 /**
- * 
- * 
+ * Struct representing a set of x-y coordinates
  */
 struct point
 {
