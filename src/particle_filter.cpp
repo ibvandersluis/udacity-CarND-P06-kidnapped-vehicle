@@ -155,7 +155,16 @@ void ParticleFilter::updateWeights(
 
       tf_observations.emplace_back(tf_obs);
     }
+    // Landmarks must be a vector of osbervations for data association
+    auto predicted_obs = std::vector<LandmarkObs>{};
+    for (size_t i = 0; i < map_landmarks.landmark_list.size(); ++i) {
+      auto landmark = map_landmarks.landmark_list.at(i);
+      auto observation = LandmarkObs{landmark.id_i, landmark.x_f, landmark.y_f};
+      predicted_obs.emplace_back(observation);
+    }
     // TODO: Step 2 - Associate transformed observations with nearest landmark
+    dataAssociation(predicted_obs, tf_observations);
+
     for (size_t k = 0; k < tf_observations.size(); ++k) {
       // TODO: Step 3a - Calculate probabilities
     }
