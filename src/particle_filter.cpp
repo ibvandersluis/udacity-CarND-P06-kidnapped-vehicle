@@ -147,9 +147,10 @@ void ParticleFilter::updateWeights(
    *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
    */
 
-  for (size_t i = 0; i < particles_.size(); ++i) {
+  weights_.clear();
+
+  for (auto & p : particles_) {
     auto tf_observations = vector<LandmarkObs>{};
-    auto & p = particles_.at(i);
 
     for (auto & obs : observations) {
       auto tf_x = p.x + (cos(p.theta) * obs.x) - (sin(p.theta) * obs.y);
@@ -169,15 +170,18 @@ void ParticleFilter::updateWeights(
     // TODO: Step 2 - Associate transformed observations with nearest landmark
     dataAssociation(predicted, tf_observations);
 
+    auto weight = 1.0;
+
     for (auto & obs : tf_observations) {
       // TODO: Step 3a - Calculate probabilities
       auto lm = getLandmarkById(obs.id, map_landmarks);
       auto probability = mv_pdf(obs.x, obs.y, lm.x_f, lm.y_f, std_landmark[0], std_landmark[1]);
 
       // TODO: Step 3b - Combine probabilities
-      particles_.at(i).weight *= probability;
+      weight *= probability;
     }
-    weights_.emplace_back(particles_.at(i).weight);
+    p.weight = weight;
+    weights_.emplace_back(weight);
   }
 }
 

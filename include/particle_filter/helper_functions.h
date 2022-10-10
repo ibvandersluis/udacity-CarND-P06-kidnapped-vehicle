@@ -77,7 +77,7 @@ inline double mv_pdf(
   auto sig_sq_y = std_y * std_y;
 
   auto e_exp = exp(-1 * (diff_x_sq / (2 * sig_sq_x) + diff_y_sq / (2 * sig_sq_y)));
-  auto mv_pdf = (1 / 2 * M_PI * std_x * std_y) * e_exp;
+  auto mv_pdf = (1 / (2 * M_PI * std_x * std_y)) * e_exp;
 
   return mv_pdf;
 }
