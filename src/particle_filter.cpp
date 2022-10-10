@@ -167,19 +167,15 @@ void ParticleFilter::updateWeights(
 
     for (size_t l = 0; l < tf_observations.size(); ++l) {
       // TODO: Step 3a - Calculate probabilities
-      auto obs = tf_observations.at(l);
+      auto obs = point{tf_observations.at(l).x, tf_observations.at(l).y};
       auto lm = getLandmarkById(tf_observations.at(l).id, map_landmarks);
+      auto predicted = point{lm.x_f, lm.y_f};
+      auto probability = mv_pdf(obs, predicted, std_landmark[0], std_landmark[1]);
 
-      auto diff_x_sq = (obs.x - lm.x_f) * (obs.x - lm.x_f);
-      auto diff_y_sq = (obs.y - lm.y_f) * (obs.y - lm.y_f);
-      auto sig_sq_x = std_landmark[0] * std_landmark[0];
-      auto sig_sq_y = std_landmark[1] * std_landmark[1];
-
-      auto e_exp = exp(-1 * (diff_x_sq / (2 * sig_sq_x) + diff_y_sq / (2 * sig_sq_y)));
-      auto mv_pdf = (1 / 2 * M_PI * std_landmark[0] * std_landmark[1]) * e_exp;
       // TODO: Step 3b - Combine probabilities
-      particles_.at(i).weight *= mv_pdf;
+      particles_.at(i).weight *= probability;
     }
+    weights_.emplace_back(particles_.at(i).weight);
   }
 }
 

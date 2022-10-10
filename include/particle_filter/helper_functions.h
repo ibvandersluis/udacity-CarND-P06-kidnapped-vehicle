@@ -62,6 +62,25 @@ struct LandmarkObs
 };
 
 /**
+ * Computes the multivariate PDF given an ovservation, a prediction, and std_dev
+ * @param (obs) the observed location of the landmark
+ * @param (lm) the expected location of the landmark
+ * @param (std_x, std_y) the standard deviation of x and y, repectively
+ * @output the probability that obs is indeed lm
+ */
+inline double mv_pdf(point obs, point lm, double std_x, double std_y)
+{
+  auto diff_x_sq = (obs.x - lm.x) * (obs.x - lm.x);
+  auto diff_y_sq = (obs.y - lm.y) * (obs.y - lm.y);
+  auto sig_sq_x = std_x * std_x;
+  auto sig_sq_y = std_y * std_y;
+
+  auto e_exp = exp(-1 * (diff_x_sq / (2 * sig_sq_x) + diff_y_sq / (2 * sig_sq_y)));
+  auto mv_pdf = (1 / 2 * M_PI * std_x * std_y) * e_exp;
+
+  return mv_pdf;
+}
+/**
  * Computes the Euclidean distance between two 2D points.
  * @param (x1,y1) x and y coordinates of first point
  * @param (x2,y2) x and y coordinates of second point
