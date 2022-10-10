@@ -4,9 +4,61 @@ The sixth project in the Udacity Self-Driving Car Engineer Nanodegree: using an 
 
 ## Description
 
-The particle filter algorithm works like this:
+The particle filter algorithm works using the following algorithm:
 
 ![Particle Filter Algorithm Flowchart](https://user-images.githubusercontent.com/14826664/193294008-6de88409-48c1-40af-ae91-304e7890a90c.png)
+
+The steps that are critical to executing this algorithm correctly are, in order of execution,
+
+1. Initialisation
+2. Prediction
+3. Data association
+4. Updating weights
+5. Resampling with replacement
+
+I'll go through them now in slightly more detail.
+
+### 1. Initialisation
+
+Without any prior information, the particle filter would have to initialise all particles by distributing them randomly across the state space.
+However, with this implementation, we have a starting estimate.
+This algorithm initialises all particles to the same location, with Gaussian noise added.
+
+### 2. Prediction
+
+We have a vehicle of a known structure, which gives it deterministic motion based on the velocity and the steering angle.
+In this case, our motion model is the bicycle model.
+
+![Bicycle Model Diagram](https://user-images.githubusercontent.com/14826664/194922426-686ba820-2d36-4ae4-811d-9bb983e85dc0.png)
+
+This means that, with some small random deviations, we can closely predict where the vehicle will be if we know:
+
+1. How much time has passed
+2. The velocity of the vehicle
+3. The yaw rate (steering angle) of the vehicle
+
+### 3. Data association
+
+Data association is preformed using the nearest neighbour algorithm, where we make a simple association between the vehicles's predicted landmarks and its obeserved landmarks.
+To do this, we transform observed landmarks to the global frame, then for each observation, iterate through all predicted landmarks.
+Each observed landmark then identifies the closest predicted landmark as the one it has seen.
+These associations may be wildly incorrect, but if that is the case, the particle will have a low weight and is likely to die out.
+
+### 4. Updating weights
+
+With data associations for each observation for each particle, we can now evaluate the likelihood that a given particle is close to the vehicle's true position.
+This is computed by evaluating a multi-variate probability density function (PDF) using the pose of the observed landmark, the predicted landmark, and the standard deviations in the x and y directions.
+The particle's weight is multiplied by the indivitual multivariate PDF for each observation.
+In this way, particles are close to the vehicle's true position will receive higher weights than those that are far off.
+
+### 5. Resampling with replacement
+
+Finally, a new set of particles are resampled from the old set.
+The probability of a particle being resampled into the new set is proportionate to that particle's weight compared to the sum of all the weights.
+C++ includes a function that conveniently does exactly this, returning the index of an item in a list proportionate to it's value as a percentage of the whole.
+The function is called [discrete_distibution](https://en.cppreference.com/w/cpp/numeric/random/discrete_distribution).
+
+After resampling, the algorithm repeats indefinitely (skipping the initialisation step).
 
 ## Requirements
 
@@ -60,14 +112,14 @@ You should get back:
 ```
 Listening to port 4567
 ```
-2. Run the simulator and select '[name]'
+2. Run the simulator and select 'Kidnapped Vehicle'
 
 When you do this, the particle filter executable should report:
 ```
 Connected!!!
 ```
-3. Select either Dataset 1 or Dataset 2 and click start. You should see laser measurements appear in red and radar measurements appear in blue. The output of the EKF will appear as green triangle markers and should follow the car smoothly. [replace with particle filter instructions]
+3. Click start. You should see green lines appear between the vehicle and the landmarks. The ground truth of the vehicle is a blue car, and the result of the particle filter is a blue arrow. The arrow should be following the car very closely.
 
-![Particle Filter Simulator](https://user-images.githubusercontent.com/14826664/183123351-5cafaee7-8ee1-4e20-be41-b2cf7b462bf7.png)
+![Kidnapped Robot Simulation](https://user-images.githubusercontent.com/14826664/194925819-6f3a5839-f192-40b7-8f86-706f131c7d4d.png)
 
 > NOTE: If you want to run the particle filter again, click the RESET button but restart the particle filter executable before clicking START again!
