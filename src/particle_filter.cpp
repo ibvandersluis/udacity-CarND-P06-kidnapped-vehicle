@@ -58,7 +58,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[])
   initialized_ = true;
 }
 
-void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate)
+void ParticleFilter::prediction(double d_t, double std_pos[], double velocity, double yaw_rate)
 {
   /**
    * TODO: Add measurements to each particle and add random Gaussian noise.
@@ -71,21 +71,29 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
   std::default_random_engine gen;
 
   for (size_t i = 0; i < particles_.size(); ++i) {
-    double initial_x = particles_.at(i).x;
-    double initial_y = particles_.at(i).y;
-    double initial_yaw = particles_.at(i).theta;
+    Particle & p = particles_.at(i);
 
-    double new_yaw = initial_yaw + (yaw_rate * delta_t);
-    double new_x = initial_x + ((velocity / yaw_rate) * (sin(new_yaw) - sin(initial_yaw)));
-    double new_y = initial_y + ((velocity / yaw_rate) * (cos(initial_yaw) - cos(new_yaw)));
+    auto theta_f = double{};
+    auto x_f = double{};
+    auto y_f = double{};
 
-    std::normal_distribution<double> dist_x(new_x, std_pos[0]);
-    std::normal_distribution<double> dist_y(new_y, std_pos[1]);
-    std::normal_distribution<double> dist_theta(new_yaw, std_pos[2]);
+    if (abs(yaw_rate) < 0.0001) {  // If yaw rate is effectively 0
+      theta_f = p.theta;
+      x_f = p.x + velocity * d_t * cos(p.theta);
+      y_f = p.y + velocity * d_t * sin(p.theta);
+    } else {
+      theta_f = p.theta + yaw_rate * d_t;
+      x_f = p.x + ((velocity / yaw_rate) * (sin(theta_f) - sin(p.theta)));
+      y_f = p.y + ((velocity / yaw_rate) * (cos(p.theta) - cos(theta_f)));
+    }
 
-    particles_.at(i).x = dist_x(gen);
-    particles_.at(i).y = dist_y(gen);
-    particles_.at(i).theta = dist_theta(gen);
+    std::normal_distribution<double> dist_x(x_f, std_pos[0]);
+    std::normal_distribution<double> dist_y(y_f, std_pos[1]);
+    std::normal_distribution<double> dist_theta(theta_f, std_pos[2]);
+
+    p.x = dist_x(gen);
+    p.y = dist_y(gen);
+    p.theta = dist_theta(gen);
   }
 }
 
