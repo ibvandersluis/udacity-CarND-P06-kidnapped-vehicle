@@ -68,10 +68,11 @@ struct LandmarkObs
  * @param (std_x, std_y) the standard deviation of x and y, repectively
  * @output the probability that obs is indeed lm
  */
-inline double mv_pdf(point obs, point lm, double std_x, double std_y)
+inline double mv_pdf(
+  double x_obs, double y_obs, double x_pred, double y_pred, double std_x, double std_y)
 {
-  auto diff_x_sq = (obs.x - lm.x) * (obs.x - lm.x);
-  auto diff_y_sq = (obs.y - lm.y) * (obs.y - lm.y);
+  auto diff_x_sq = (x_obs - x_pred) * (x_obs - x_pred);
+  auto diff_y_sq = (y_obs - y_pred) * (y_obs - y_pred);
   auto sig_sq_x = std_x * std_x;
   auto sig_sq_y = std_y * std_y;
 

@@ -70,9 +70,7 @@ void ParticleFilter::prediction(double d_t, double std_pos[], double velocity, d
 
   std::default_random_engine gen;
 
-  for (size_t i = 0; i < particles_.size(); ++i) {
-    Particle & p = particles_.at(i);
-
+  for (auto & p : particles_) {
     auto theta_f = double{};
     auto x_f = double{};
     auto y_f = double{};
@@ -151,35 +149,30 @@ void ParticleFilter::updateWeights(
 
   for (size_t i = 0; i < particles_.size(); ++i) {
     auto tf_observations = vector<LandmarkObs>{};
-    auto theta = particles_.at(i).theta;
-    auto p = point{particles_.at(i).x, particles_.at(i).y};
-    for (size_t j = 0; j < observations.size(); ++j) {
-      // TODO: Step 1 - TF from vehicle frame to map frame
-      auto obs = point{observations.at(j).x, observations.at(j).y};
+    auto & p = particles_.at(i);
 
-      auto tf_x = p.x + (cos(theta) * obs.x) - (sin(theta) * obs.y);
-      auto tf_y = p.y + (sin(theta) * obs.x) + (cos(theta) * obs.y);
+    for (auto & obs : observations) {
+      auto tf_x = p.x + (cos(p.theta) * obs.x) - (sin(p.theta) * obs.y);
+      auto tf_y = p.y + (sin(p.theta) * obs.x) + (cos(p.theta) * obs.y);
 
-      auto tf_obs = LandmarkObs{observations.at(j).id, tf_x, tf_y};
+      auto tf_obs = LandmarkObs{obs.id, tf_x, tf_y};
 
       tf_observations.emplace_back(tf_obs);
     }
     // Landmarks must be a vector of osbervations for data association
-    auto predicted_obs = std::vector<LandmarkObs>{};
-    for (size_t k = 0; k < map_landmarks.landmark_list.size(); ++k) {
-      auto landmark = map_landmarks.landmark_list.at(k);
-      auto observation = LandmarkObs{landmark.id_i, landmark.x_f, landmark.y_f};
-      predicted_obs.emplace_back(observation);
+    auto predicted = std::vector<LandmarkObs>{};
+
+    for (auto & lm_map : map_landmarks.landmark_list) {
+      auto lm = LandmarkObs{lm_map.id_i, lm_map.x_f, lm_map.y_f};
+      predicted.emplace_back(lm);
     }
     // TODO: Step 2 - Associate transformed observations with nearest landmark
-    dataAssociation(predicted_obs, tf_observations);
+    dataAssociation(predicted, tf_observations);
 
-    for (size_t l = 0; l < tf_observations.size(); ++l) {
+    for (auto & obs : tf_observations) {
       // TODO: Step 3a - Calculate probabilities
-      auto obs = point{tf_observations.at(l).x, tf_observations.at(l).y};
-      auto lm = getLandmarkById(tf_observations.at(l).id, map_landmarks);
-      auto predicted = point{lm.x_f, lm.y_f};
-      auto probability = mv_pdf(obs, predicted, std_landmark[0], std_landmark[1]);
+      auto lm = getLandmarkById(obs.id, map_landmarks);
+      auto probability = mv_pdf(obs.x, obs.y, lm.x_f, lm.y_f, std_landmark[0], std_landmark[1]);
 
       // TODO: Step 3b - Combine probabilities
       particles_.at(i).weight *= probability;
