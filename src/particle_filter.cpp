@@ -44,7 +44,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[])
 
   num_particles_ = 1000;  // TODO: Set the number of particles
 
-  for (int i = 0; i < num_particles_; ++i) {
+  for (unsigned int i = 0; i < num_particles_; ++i) {
     Particle p;
 
     p.id = i;
@@ -123,7 +123,7 @@ void ParticleFilter::dataAssociation(
 }
 
 void ParticleFilter::updateWeights(
-  double sensor_range, double std_landmark[], const vector<LandmarkObs> & observations,
+  double /* sensor_range */, double std_landmark[], const vector<LandmarkObs> & observations,
   const Map & map_landmarks)
 {
   /**
