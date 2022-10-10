@@ -157,18 +157,29 @@ void ParticleFilter::updateWeights(
     }
     // Landmarks must be a vector of osbervations for data association
     auto predicted_obs = std::vector<LandmarkObs>{};
-    for (size_t i = 0; i < map_landmarks.landmark_list.size(); ++i) {
-      auto landmark = map_landmarks.landmark_list.at(i);
+    for (size_t k = 0; k < map_landmarks.landmark_list.size(); ++k) {
+      auto landmark = map_landmarks.landmark_list.at(k);
       auto observation = LandmarkObs{landmark.id_i, landmark.x_f, landmark.y_f};
       predicted_obs.emplace_back(observation);
     }
     // TODO: Step 2 - Associate transformed observations with nearest landmark
     dataAssociation(predicted_obs, tf_observations);
 
-    for (size_t k = 0; k < tf_observations.size(); ++k) {
+    for (size_t l = 0; l < tf_observations.size(); ++l) {
       // TODO: Step 3a - Calculate probabilities
+      auto obs = tf_observations.at(l);
+      auto lm = getLandmarkById(tf_observations.at(l).id, map_landmarks);
+
+      auto diff_x_sq = (obs.x - lm.x_f) * (obs.x - lm.x_f);
+      auto diff_y_sq = (obs.y - lm.y_f) * (obs.y - lm.y_f);
+      auto sig_sq_x = std_landmark[0] * std_landmark[0];
+      auto sig_sq_y = std_landmark[1] * std_landmark[1];
+
+      auto e_exp = exp(-1 * (diff_x_sq / (2 * sig_sq_x) + diff_y_sq / (2 * sig_sq_y)));
+      auto mv_pdf = (1 / 2 * M_PI * std_landmark[0] * std_landmark[1]) * e_exp;
+      // TODO: Step 3b - Combine probabilities
+      particles_.at(i).weight *= mv_pdf;
     }
-    // TODO: Step 3b - Combine probabilities
   }
 }
 
@@ -221,4 +232,13 @@ string ParticleFilter::getSenseCoord(Particle best, string coord)
   string s = ss.str();
   s = s.substr(0, s.length() - 1);  // get rid of the trailing space
   return s;
+}
+
+Map::single_landmark_s ParticleFilter::getLandmarkById(unsigned int id, const Map & map)
+{
+  for (size_t i = 0; i < map.landmark_list.size(); ++i) {
+    if (map.landmark_list.at(i).id_i == id) return map.landmark_list.at(i);
+  }
+
+  throw std::runtime_error("No matching landmark found");
 }

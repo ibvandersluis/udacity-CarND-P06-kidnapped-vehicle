@@ -108,6 +108,7 @@ public:
    */
   std::string getAssociations(Particle best);
   std::string getSenseCoord(Particle best, std::string coord);
+  Map::single_landmark_s getLandmarkById(unsigned int id, const Map & map);
 
   // Set of current particles
   std::vector<Particle> particles_;
