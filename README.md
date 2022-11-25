@@ -106,7 +106,7 @@ To run this project as intended, you will need the [Term 2 Udacity Simulator](ht
 
 1. Run the particle filter
 ```
-./executable
+./particle_filter
 ```
 You should get back:
 ```
