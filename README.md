@@ -66,7 +66,6 @@ After resampling, the algorithm repeats indefinitely (skipping the initialisatio
 - make >= 4.1
 - gcc/g++ >= 5.4
 - uWebSockets
-- [Eigen](https://eigen.tuxfamily.org/index.php)
 
 To install uWebSockets, follow these instructions:
 ```
